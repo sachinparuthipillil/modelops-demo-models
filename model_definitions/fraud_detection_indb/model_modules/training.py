@@ -74,7 +74,7 @@ def train(context: ModelContext, **kwargs):
         model_type=model_type,
         seed=42,
         shrinkage_factor=0.1,
-        max_depth=7
+        max_depth=5
     )
 
 
