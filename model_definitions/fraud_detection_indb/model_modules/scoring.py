@@ -1,8 +1,7 @@
 from teradataml import (
     copy_to_sql,
     DataFrame,
-    XGBoostPredict,
-    ScaleTransform
+    XGBoostPredict
 )
 from tmo import (
     record_scoring_stats,
@@ -31,22 +30,18 @@ def score(context: ModelContext, **kwargs):
     print(f"Loading scaler from table scaler_{context.model_version}")
     scaler = DataFrame(f"scaler_{context.model_version}")
 
-    scaled_test = ScaleTransform(
-        data=test_df,
-        object=scaler,
-        accumulate=entity_key
-    )
 
     print("Scoring...")
+
     predictions = XGBoostPredict(
-        object=model,
-        newdata=scaled_test.result,
-        model_type='Classification',
-        id_column=entity_key,
-        output_prob=True,
-        output_responses=['0', '1'],
-        object_order_column=['task_index', 'tree_num',
-                             'iter', 'class_num', 'tree_order']
+    newdata=test_df,
+    object=model,
+    model_type='Classification',
+    id_column=entity_key,
+    output_prob=True,
+    object_order_column=['task_index', 'tree_num',
+                       'iter', 'class_num', 'tree_order'],
+    output_responses=['0', '1']
     )
 
     predictions_pdf = predictions.result.to_pandas(all_rows=True).rename(

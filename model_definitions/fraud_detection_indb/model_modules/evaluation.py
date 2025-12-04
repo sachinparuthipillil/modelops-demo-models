@@ -2,7 +2,6 @@ from sklearn.metrics import confusion_matrix
 from teradataml import (
     DataFrame,
     copy_to_sql,
-    ScaleTransform,
     XGBoostPredict,
     ConvertTo,
     ClassificationEvaluator,
@@ -97,24 +96,21 @@ def evaluate(context: ModelContext, **kwargs):
     print(f"Loading scaler from table scaler_{context.model_version}")
     scaler = DataFrame(f"scaler_{context.model_version}")
 
-    scaled_test = ScaleTransform(
-        data=test_df,
-        object=scaler,
-        accumulate=[target_name, entity_key]
-    )
 
     print("Evaluating...")
+
     predictions = XGBoostPredict(
-        object=model,
-        newdata=scaled_test.result,
-        model_type='Classification',
-        accumulate=target_name,
-        id_column=entity_key,
-        output_prob=True,
-        output_responses=['0', '1'],
-        object_order_column=['task_index', 'tree_num',
-                             'iter', 'class_num', 'tree_order']
+    newdata=test_df,
+    object=model,
+    model_type='Classification',
+    id_column=entity_key,
+    object_order_column=['task_index', 'tree_num',
+                       'iter', 'class_num', 'tree_order'],
+    accumulate=target_name,
+    output_prob=True,
+    output_responses=['0', '1']
     )
+    
 
     predicted_data = ConvertTo(
         data=predictions.result,

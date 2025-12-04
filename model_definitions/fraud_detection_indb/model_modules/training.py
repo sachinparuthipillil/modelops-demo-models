@@ -1,8 +1,6 @@
 from teradataml import (
     DataFrame,
-    XGBoost,
-    ScaleFit,
-    ScaleTransform,
+    XGBoost
 )
 
 from tmo import (
@@ -53,49 +51,32 @@ def train(context: ModelContext, **kwargs):
     target_name = context.dataset_info.target_names[0]
     entity_key = context.dataset_info.entity_key
 
-    # read training dataset from Teradata and convert to pandas
-    train_df = DataFrame.from_query(context.dataset_info.sql)
-
-    print("Scaling using InDB Functions...")
-
     # Extract and cast hyperparameters
-    scale_method = str(context.hyperparams["scale_method"])
-    miss_value = str(context.hyperparams["miss_value"])
-    global_scale = str(context.hyperparams["global_scale"]).lower() in ['true', '1']
-    multiplier = str(context.hyperparams["multiplier"])
-    intercept = str(context.hyperparams["intercept"])
+    #scale_method = str(context.hyperparams["scale_method"])
+    #miss_value = str(context.hyperparams["miss_value"])
+    #global_scale = str(context.hyperparams["global_scale"]).lower() in ['true', '1']
+    #multiplier = str(context.hyperparams["multiplier"])
+    #intercept = str(context.hyperparams["intercept"])
     model_type = str(context.hyperparams["model_type"])
     lambda1 = float(context.hyperparams["lambda1"])
 
-    scaler = ScaleFit(
-        data=train_df,
-        target_columns=feature_names,
-        scale_method=scale_method,
-        miss_value=miss_value,
-        global_scale=global_scale,
-        multiplier=multiplier,
-        intercept=intercept
-    )
+    # read training dataset from Teradata and convert to pandas
+    train_df = DataFrame.from_query(context.dataset_info.sql)
 
-    scaled_train = ScaleTransform(
-        data=train_df,
-        object=scaler.output,
-        accumulate=[target_name, entity_key]
-    )
 
-    scaler.output.to_sql(
-        f"scaler_{context.model_version}", if_exists="replace")
-    print(f"Saved scaler in table scaler_{context.model_version}")
-
-    print("Starting training...")
+    print("Training using InDB Functions...")
 
     model = XGBoost(
-        data=scaled_train.result,
+        data=train_df,
         input_columns=feature_names,
-        response_column=target_name,
+        response_column = target_name,
+        lambda1 = lambda1,
         model_type=model_type,
-        lambda1=lambda1
+        seed=42,
+        shrinkage_factor=0.1,
+        max_depth=7
     )
+
 
     model.result.to_sql(
         f"model_{context.model_version}", if_exists="replace")
