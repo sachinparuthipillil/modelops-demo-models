@@ -92,11 +92,6 @@ def evaluate(context: ModelContext, **kwargs):
 
     test_df = DataFrame.from_query(context.dataset_info.sql)
 
-    # Scaling the test set
-    print(f"Loading scaler from table scaler_{context.model_version}")
-    scaler = DataFrame(f"scaler_{context.model_version}")
-
-
     print("Evaluating...")
 
     predictions = XGBoostPredict(

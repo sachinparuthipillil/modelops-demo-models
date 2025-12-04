@@ -26,11 +26,6 @@ def score(context: ModelContext, **kwargs):
     features_tdf = DataFrame.from_query(context.dataset_info.sql)
     features_pdf = features_tdf.to_pandas(all_rows=True)
 
-    # Scaling the test set
-    print(f"Loading scaler from table scaler_{context.model_version}")
-    scaler = DataFrame(f"scaler_{context.model_version}")
-
-
     print("Scoring...")
 
     predictions = XGBoostPredict(
