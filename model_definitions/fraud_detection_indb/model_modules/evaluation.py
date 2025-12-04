@@ -139,7 +139,7 @@ def evaluate(context: ModelContext, **kwargs):
         json.dump(evaluation, f)
 
     cm = confusion_matrix(predicted_data.result.to_pandas()[
-                          'HasDiabetes'], predicted_data.result.to_pandas()['Prediction'])
+                          'IS_FRAUD'], predicted_data.result.to_pandas()['Prediction'])
 
     plot_confusion_matrix(
         cm, f"{context.artifact_output_path}/confusion_matrix")
