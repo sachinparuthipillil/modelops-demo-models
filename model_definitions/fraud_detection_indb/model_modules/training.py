@@ -59,7 +59,7 @@ def train(context: ModelContext, **kwargs):
     #intercept = str(context.hyperparams["intercept"])
     model_type = str(context.hyperparams["model_type"])
     lambda1 = float(context.hyperparams["lambda1"])
-    max_depth = float(context.hyperparams["max_depth"])
+    max_depth = int(context.hyperparams["max_depth"])
 
     # read training dataset from Teradata and convert to pandas
     train_df = DataFrame.from_query(context.dataset_info.sql)
