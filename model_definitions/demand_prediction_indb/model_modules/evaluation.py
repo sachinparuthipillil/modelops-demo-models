@@ -64,10 +64,10 @@ def evaluate(context: ModelContext, **kwargs):
     ])
     
     evaluation = {
-        'MAE': '{:.2f}'.format(metrics_pd.MAE[0]),
-        'RMSE': '{:.2f}'.format(metrics_pd.RMSE[0]),
-        'MAPE_%': '{:.2f}'.format(metrics_pd.MAPE[0]),
-        'R-square': '{:.2f}'.format(metrics_pd.Rsquare[0]),
+        'MAE': '{}'.format(metrics_pd.MAE[0]),
+        'RMSE': '{}'.format(metrics_pd.RMSE[0]),
+        'MAPE_%': '{}'.format(metrics_pd.MAPE[0]),
+        'R-square': '{}'.format(metrics_pd.Rsquare[0]),
     }
 
     with open(f"{context.artifact_output_path}/metrics.json", "w+") as f:
