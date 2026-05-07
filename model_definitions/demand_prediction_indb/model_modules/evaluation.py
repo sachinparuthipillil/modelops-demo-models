@@ -78,7 +78,7 @@ def evaluate(context: ModelContext, **kwargs):
     
 
     predictions_table = "predictions_tmp"
-    copy_to_sql(df=predicted_data.result, table_name=predictions_table,
+    copy_to_sql(df=predicted_data, table_name=predictions_table,
                 index=False, if_exists="replace", temporary=True)
 
     # calculate stats if training stats exist
