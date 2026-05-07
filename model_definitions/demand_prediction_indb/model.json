@@ -1,0 +1,6 @@
+{
+    "id": "3fa5e74e-ac24-4c50-8ee4-9ad70084e312",
+    "name": "In-database Demand Forecast Prediction",
+    "description": "In-database XGBoost for Demand Forecast Prediction",
+    "language": "python"
+}
