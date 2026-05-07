@@ -53,7 +53,7 @@ def evaluate(context: ModelContext, **kwargs):
     predicted_data = ConvertTo(
         data=predictions.result,
         target_columns=[target_name, 'Prediction'],
-        target_datatype=["FLOAT"]
+        target_datatype=["DECIMAL"]
     )
 
     predicted_data = predicted_data.result.to_pandas()
