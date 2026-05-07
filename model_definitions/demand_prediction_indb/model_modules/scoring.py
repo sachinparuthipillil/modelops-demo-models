@@ -32,8 +32,7 @@ def score(context: ModelContext, **kwargs):
     newdata=test_df,
     object=model,
     model_type='Regression',
-    id_column=entity_key,
-    accumulate=target_name
+    id_column=entity_key
     )
 
     predictions_pdf = predictions.result.to_pandas(all_rows=True).rename(
