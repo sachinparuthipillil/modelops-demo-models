@@ -1,0 +1,14 @@
+{
+   "hyperParameters": {
+    "model_type": "Classification",
+    "scale_method":"RANGE",
+    "miss_value":"KEEP",
+    "global_scale": "False",
+    "multiplier":"1",
+    "intercept":"0",
+    "max_depth": 6,
+	"lambda1":1000.0,
+    "learning_rate": 0.1,
+    "seed" : 42
+    }
+}

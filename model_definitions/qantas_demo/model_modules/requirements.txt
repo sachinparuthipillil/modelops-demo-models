@@ -1,0 +1,6 @@
+teradatamodelops==7.2.0
+teradataml
+pandas
+numpy
+lightgbm==4.6.0
+scikit-survival
