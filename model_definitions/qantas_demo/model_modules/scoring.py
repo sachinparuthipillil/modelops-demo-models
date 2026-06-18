@@ -13,6 +13,7 @@ from teradataml import (
     Antiselect,
  
 )
+from teradataml import *
 from aoa import (
     record_scoring_stats,
     aoa_create_context,
@@ -116,16 +117,27 @@ def score(context: ModelContext, **kwargs):
         if_exists="replace"
     )
     
-    lgb_model_path = f"{context.artifact_input_path}/accrual_model_tuned.txt"
-     #tenure_model_path = f"{context.artifact_input_path}/rsf_model.pkl"
-
-    #with open(tenure_model_path, "rb") as f:
-        #tenure_model = pickle.load(f)
     
-    lgb_model = lgb.Booster(model_file=lgb_model_path)    
+    # Get features from the model
+    print("loading model")
+    
+    cur = get_context().raw_connection().cursor()
+    cur.execute(f"SELECT file_content FROM qa_model_table")
+    row = cur.fetchone()
+  
+    print(row[0][:100])
+    content = row[0]
+    
+    print("writing model to the file")
+    with open("temp_file.txt", "w", encoding="utf-8") as f:
+        f.write(content)
+    print("converting model to LGB")
+    lgb_model=lgb.Booster(model_file='temp_file.txt')
 
     #Light GB features
     feature_names_lgb = lgb_model.feature_name()
+    print(feature_names_lgb)
+     
     
     df_lgb = test_df.select(feature_names_lgb+[entity_key]).to_pandas(index_column = entity_key, all_rows = True)
 
